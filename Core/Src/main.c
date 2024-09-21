@@ -141,6 +141,8 @@ int main(void)
   ST7920_Init();
   ST7920_Graphic_mode(1);
 
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+
   draw_logo();
 
   clear_screen();
@@ -160,6 +162,8 @@ int main(void)
 
 	  if (should_draw) {
 
+		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
 		  void display_qr_error() {
 			  clear_screen();
 			  print_on_x_center(2, "Не удалось");
@@ -167,12 +171,17 @@ int main(void)
 		      ST7920_Update();
 		  }
 
+		  void finished_drawing() {
+			  buffer_overflow = false;
+			  should_draw = false;
+			  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+			  HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
+		  }
+
 
 		  if (buffer_overflow) {
 			  display_qr_error();
-			  buffer_overflow = false;
-			  should_draw = false;
-			  HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
+			  finished_drawing();
 			  continue;
 		  }
 
@@ -191,8 +200,7 @@ int main(void)
 
 		  if (!ok) {
 			  display_qr_error();
-			  should_draw = false;
-			  HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
+			  finished_drawing();
 			  continue;
 		  }
 
@@ -216,8 +224,7 @@ int main(void)
 		  ST7920_Update();
 
 		  //Start waiting for another QR
-		  should_draw = false;
-		  HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
+		  finished_drawing();
 	  }
 
     /* USER CODE END WHILE */
