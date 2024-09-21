@@ -16,21 +16,20 @@ Due to the screen size of 128x64 pixels, the maximum version of the QR code that
 
 A small demonstration
 ---
-
-<img src="https://github.com/user-attachments/assets/9de2db33-34fb-489d-b26d-45896245ca7c" alt="1" width="50%"><br><br>
-<img src="https://github.com/user-attachments/assets/30e87446-cdf0-4ca2-a535-281cb2975c3f" alt="2" width="50%"><br><br>
+<img src="https://github.com/user-attachments/assets/67a61bd0-6538-4581-b251-a707ee2ab983" alt="1" width="45%">&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/848613b9-10b5-44a1-b80a-a6aa9c278f08" alt="2" width="45%"><br><br>
 
 <details>
   <summary>Encoded:</summary>
   <em>https://www.example.com</em>
 </details>
-<img src="https://github.com/user-attachments/assets/52b5fdb8-9b3b-47b8-840b-807a67cd8908" alt="3" width="50%"><br><br>
+<img src="https://github.com/user-attachments/assets/4f3449bc-193c-49bc-8a3d-94f26451cb5e" alt="3" width="45%"><br><br>
 
 <details>
   <summary>Encoded:</summary>
   <em>Lorem ipsum odor amet, consectetuer adipiscing elit. Natoque commodo augue semper semper justo ullamcorper molestie neque. Velit a viverra sed, quisque consectetur mattis. Non malesuada magna imperdiet leo massa molestie pharetra. Diam feugiat nullam semper velit mi elementum. Sapien vulputate velit eu lacinia rutrum.</em>
 </details>
-<img src="https://github.com/user-attachments/assets/6257cbc2-d2d9-463e-9036-7176a71ce6b2" alt="4" width="50%"><br><br>
+<img src="https://github.com/user-attachments/assets/d46587cb-2a88-4e17-8f82-1631387abfa7" alt="4" width="45%"><br><br>
 
 Used libraries
 ---
