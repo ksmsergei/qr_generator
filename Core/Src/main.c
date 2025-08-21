@@ -79,38 +79,51 @@ void generateQR();
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void clear_screen() {
+	ST7920_Draw_rectangle_filled(0, 0, 127, 63);
+}
+
+void print_on_x_center(uint8_t y, const char *str) {
+	int len = 0;
+	const char *s = str;
+
+	//Calculate UTF8-aware string length
+	while (*s) {
+		if ((*s & 0xC0) != 0x80) {
+			len++;
+		}
+
+		s++;
+	}
+
+	sprintf(tx_buffer, "%s", str);
+	ST7920_Decode_UTF8(64 - len * 3, y, 1, tx_buffer);
+}
+
+void display_qr_error() {
+	clear_screen();
+	print_on_x_center(2, "Не удалось");
+	print_on_x_center(3, "сгенерировать QR");
+	ST7920_Update();
+}
+
+void finished_drawing() {
+	buffer_overflow = false;
+	should_draw = false;
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+	HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
+}
+
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
-
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
-	void clear_screen() {
-		ST7920_Draw_rectangle_filled(0, 0, 127, 63);
-	}
-
-	void print_on_x_center(uint8_t y, const char *str) {
-		int len = 0;
-		const char *s = str;
-
-		//Calculate UTF8-aware string length
-		while (*s) {
-	    	if ((*s & 0xC0) != 0x80) {
-	        	len++;
-	    	}
-
-	        s++;
-	      }
-
-		sprintf(tx_buffer, "%s", str);
-		ST7920_Decode_UTF8(64 - len * 3, y, 1, tx_buffer);
-	}
 
   /* USER CODE END 1 */
 
@@ -163,21 +176,6 @@ int main(void)
 	  if (should_draw) {
 
 		  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-
-		  void display_qr_error() {
-			  clear_screen();
-			  print_on_x_center(2, "Не удалось");
-			  print_on_x_center(3, "сгенерировать QR");
-		      ST7920_Update();
-		  }
-
-		  void finished_drawing() {
-			  buffer_overflow = false;
-			  should_draw = false;
-			  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-			  HAL_UART_Receive_IT(&huart1, &uart_rx_buffer[uart_rx_index], 1);
-		  }
-
 
 		  if (buffer_overflow) {
 			  display_qr_error();
@@ -368,8 +366,8 @@ static void MX_DMA_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -396,8 +394,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -450,8 +448,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
